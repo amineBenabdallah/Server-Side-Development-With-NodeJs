@@ -9,10 +9,12 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "express-session": "^1.17.0",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "mongoose": "^5.9.7",
     "mongoose-currency": "^0.2.0",
-    "morgan": "~1.9.0"
+    "morgan": "~1.9.0",
+    "session-file-store": "^1.4.0"
   }
 }
