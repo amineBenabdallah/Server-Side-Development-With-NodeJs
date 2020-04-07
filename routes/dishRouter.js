@@ -221,11 +221,9 @@ dishRouter.route('/:dishId/comments/:commentId')
     },(err)=>next(err))
     .catch((err)=>next(err));
 })
-.delete(cors.corsWithOptions,authenticate.verifyUser,(req,res,next) => {
-    
+.delete(cors.corsWithOptions,authenticate.verifyUser,(req,res,next) => {   
         Dishes.findById(req.params.dishId)
         .then((dish)=>{
-            
                 if(dish && dish.comments.id(req.params.commentId)){
                     if(req.user._id.equals(dish.comments.id(req.params.commentId).author)){
                         dish.comments.id(req.params.commentId).remove();
