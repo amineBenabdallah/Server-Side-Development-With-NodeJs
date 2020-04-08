@@ -13,8 +13,8 @@ favoriteRouter.route('/')
 .options(cors.corsWithOptions, (req,res)=>{res.sendStatus(200); })
 .get(cors.cors, authenticate.verifyUser, (req,res,next) => {
     Favorites.find({"user":req.user.id})
-    /*.populate('user')
-    .populate('dishes')*/
+    .populate('user')
+    .populate('dishes')
     .then((favorite)=>{
         res.statusCode = 200;
         res.setHeader('content-type','application/json');
@@ -66,8 +66,31 @@ favoriteRouter.route('/')
 
 favoriteRouter.route('/:dishId')
 .options(cors.corsWithOptions, (req,res)=>{res.sendStatus(200); })
+.get(cors.cors, authenticate.verifyUser, (req,res,next) => {
+    Favorites.find({"user":req.user.id})
+    .then((favorite)=>{
+        if(!favorite){
+            res.statusCode = 200;
+            res.setHeader('content-type','application/json');
+            return res.json({"exists":false, "favorite": favorite});
+        }
+        else{
+            if(favorite.dishes.indexOf(req.params.dishId) < 0){
+                res.statusCode = 200;
+                res.setHeader('content-type','application/json');
+                return res.json({"exists":false, "favorite": favorite});
+            }
+            else{
+                res.statusCode = 200;
+                res.setHeader('content-type','application/json');
+                return res.json({"exists":true, "favorite": favorite});
+            }
+        }
+    },(err)=>next(err))
+    .catch(err=>next(err));
+})
 .delete(cors.corsWithOptions,authenticate.verifyUser,(req,res,next) => {
-    Favorites.find({"user":"req.user.id"})
+    Favorites.find({"user":req.user.id})
         .then((favorite)=>{
                 if(favorite && favorite.dishes.id(req.params.dishId)){
                         favorite.dishes.id(req.params.dishId).remove();
